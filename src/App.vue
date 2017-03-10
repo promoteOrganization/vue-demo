@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <mu-appbar title="Title">
+      <router-link to="/">首页</router-link>
+      <router-link to="/other">其它</router-link>
+      <mu-text-field class="appbar-search-field"  slot="right" hintText="请输入搜索内容"/>
+      <mu-flat-button color="white" label="flat Button" slot="right"/>
+    </mu-appbar>
     <router-view></router-view>
   </div>
 </template>
@@ -12,12 +17,4 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
