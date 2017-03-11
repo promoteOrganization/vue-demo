@@ -1,12 +1,17 @@
 <template>
   <div class="other-view">
     <h1>{{ msg }}</h1>
+    <handle-manufaction></handle-manufaction>
   </div>
 </template>
 
 <script>
+import handleManufaction from '../components/handleManufaction.vue'
 export default {
   name: 'other-view',
+  components: {
+    handleManufaction
+  },
   data () {
     return {
       msg: '这是其它页面'
@@ -20,6 +25,5 @@ export default {
 .other-view
   width 1000px
   height 500px
-  background-color green
   margin 0px auto
 </style>

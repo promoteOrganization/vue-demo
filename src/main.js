@@ -5,9 +5,12 @@ import App from './App'
 import router from './router'
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-default/index.css'
 
 Vue.config.productionTip = false
 Vue.use(MuseUI)
+Vue.use(ElementUI)
 
 /* eslint-disable no-new */
 new Vue({
