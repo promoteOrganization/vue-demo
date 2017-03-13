@@ -1,6 +1,5 @@
 <template>
   <div class="index-view">
-    <h1>{{ msg }}</h1>
     <add-manufaction></add-manufaction>
   </div>
 </template>
@@ -23,7 +22,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus" scoped>
 .index-view
-  width 1000px
-  height 500px
+  width 800px
+  height 300px
   margin 0px auto 
+  margin-top 20px
+  border 1px solid #ADADAD	
+  border-radius 5px
 </style>

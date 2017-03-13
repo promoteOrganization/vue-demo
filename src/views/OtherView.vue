@@ -1,6 +1,5 @@
 <template>
   <div class="other-view">
-    <h1>{{ msg }}</h1>
     <handle-manufaction></handle-manufaction>
   </div>
 </template>
@@ -23,7 +22,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus" scoped>
 .other-view
-  width 1000px
-  height 500px
+  width 1200px
+  height 600px
   margin 0px auto
+  margin-top 20px
 </style>
