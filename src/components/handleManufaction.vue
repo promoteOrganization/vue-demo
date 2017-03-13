@@ -6,7 +6,7 @@
     :data="currentManufaction"
     border
     style="width: 100%"
-    @selection-change="handleSelectionChange">
+   >
     <el-table-column
       type="selection"
       width="55">
@@ -66,9 +66,12 @@
 </template>
 
 <script>
+// import manufactionApi from '../api/manufactionApi'
+import axios from 'axios'
 export default {
   created () {
     this.initManufaction()
+    this.test()
   },
   name: 'handle-manufaction',
   data () {
@@ -206,7 +209,6 @@ export default {
     },
     getCurrentManufaction (page) {
       var size = this.tableData.length
-      console.log(size)
 
       var startManufaction = this.sizePerOnePage * (page - 1)
       var endManufaction = startManufaction + this.sizePerOnePage
@@ -215,12 +217,19 @@ export default {
       for (var i = startManufaction; i < endManufaction; i++) {
         this.currentManufaction.push(this.tableData[i])
       }
+    },
+    test: function () {
+      axios.get(this.HOST)
+        .then(function (response) {
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     }
   },
   computed: {
     totalCommentSize () {
-      console.log('--------------------')
-      console.log(this.tableData.length)
       return this.tableData.length
     }
   }
