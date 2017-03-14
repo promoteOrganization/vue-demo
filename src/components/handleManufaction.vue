@@ -66,12 +66,10 @@
 </template>
 
 <script>
-// import manufactionApi from '../api/manufactionApi'
-import axios from 'axios'
+import manufactionApi from '../api/manufactionApi'
 export default {
   created () {
-    this.initManufaction()
-    this.test()
+    this.getUnsolvedManufaction()
   },
   name: 'handle-manufaction',
   data () {
@@ -80,114 +78,7 @@ export default {
       currentPage: 1,
       sizePerOnePage: 8,
       currentManufaction: [],
-      tableData: [
-        {
-          id: 1,
-          proposer: 'John Smith',
-          proposeTime: 'Employed',
-          description: 'dsffsdsf',
-          level: 1,
-          status: 1,
-          selected: true
-        },
-        {
-          id: 2,
-          proposer: 'John Smith',
-          proposeTime: 'Employed',
-          description: 'dsffsdsf',
-          level: 1,
-          status: 1
-        },
-        {
-          id: 3,
-          proposer: 'John Smith',
-          proposeTime: 'Employed',
-          description: 'dsffsdsf',
-          level: 1,
-          status: 1,
-          selected: true
-        },
-        {
-          id: 4,
-          proposer: 'John Smith',
-          proposeTime: 'Employed',
-          description: 'dsffsdsf',
-          level: 1,
-          status: 1
-        },
-        {
-          id: 5,
-          proposer: 'John Smith',
-          proposeTime: 'Employed',
-          description: 'dsffsdsf',
-          level: 1,
-          status: 1
-        },
-        {
-          id: 6,
-          proposer: 'John Smith',
-          proposeTime: 'Employed',
-          description: 'dsffsdsf',
-          level: 1,
-          status: 1
-        },
-        {
-          id: 7,
-          proposer: 'John Smith',
-          proposeTime: 'Employed',
-          description: 'dsffsdsf',
-          level: 1,
-          status: 1
-        },
-        {
-          id: 7,
-          proposer: 'John Smith',
-          proposeTime: 'Employed',
-          description: 'dsffsdsf',
-          level: 1,
-          status: 1
-        },
-        {
-          id: 7,
-          proposer: 'John Smith',
-          proposeTime: 'Employed',
-          description: 'dsffsdsf',
-          level: 1,
-          status: 1
-        },
-        {
-          id: 7,
-          proposer: 'John Smith',
-          proposeTime: 'Employed',
-          description: 'dsffsdsf',
-          level: 1,
-          status: 1
-        },
-        {
-          id: 7,
-          proposer: 'John Smith',
-          proposeTime: 'Employed',
-          description: 'dsffsdsf',
-          level: 1,
-          status: 1
-        },
-        {
-          id: 7,
-          proposer: 'John Smith',
-          proposeTime: 'Employed',
-          description: 'dsffsdsf',
-          level: 1,
-          status: 1
-        },
-        {
-          id: 7,
-          proposer: 'John Smith',
-          proposeTime: 'Employed',
-          description: 'dsffsdsf',
-          level: 1,
-          status: 1
-        }
-      ],
+      tableData: [],
       fixedHeader: true,
       selectable: true,
       multiSelectable: true,
@@ -197,9 +88,6 @@ export default {
     }
   },
   methods: {
-    initManufaction () {
-      this.getCurrentManufaction(1)
-    },
     handleSizeChange (val) {
       console.log(val)
     },
@@ -218,10 +106,12 @@ export default {
         this.currentManufaction.push(this.tableData[i])
       }
     },
-    test: function () {
-      axios.get(this.HOST)
+    getUnsolvedManufaction: function () {
+      var _this = this
+      manufactionApi.getManufaction()
         .then(function (response) {
-          console.log(response)
+          _this.tableData = response.data.result.data
+          _this.getCurrentManufaction(1)
         })
         .catch(function (error) {
           console.log(error)

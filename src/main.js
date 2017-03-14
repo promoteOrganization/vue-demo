@@ -12,8 +12,6 @@ Vue.config.productionTip = false
 Vue.use(MuseUI)
 Vue.use(ElementUI)
 
-Vue.prototype.HOST = '/api'
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
