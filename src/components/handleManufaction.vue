@@ -107,11 +107,12 @@ export default {
       }
     },
     getUnsolvedManufaction: function () {
-      var _this = this
+      // var _this = this
       manufactionApi.getManufaction()
         .then(function (response) {
-          _this.tableData = response.data.result.data
-          _this.getCurrentManufaction(1)
+          // _this.tableData = response.data.result.data
+          // _this.getCurrentManufaction(1)
+          console.log(response)
         })
         .catch(function (error) {
           console.log(error)
