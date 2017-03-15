@@ -15,7 +15,8 @@
   "dependencies": {
     "axios": "^0.15.2",
     "element-ui": "^1.0.3",
-    "muse-ui": "^2.0.0-rc.5",
+    "moment": "^2.10.6",
+    "muse-ui": "2.0.0-rc.5",
     "vue": "^2.2.2",
     "vue-router": "^2.2.0",
     "vue-resource": "^1.2.1"

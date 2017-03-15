@@ -22,7 +22,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus" scoped>
 .other-view
-  width 1200px
+  width 1300px
   height 600px
   margin 0px auto
   margin-top 20px

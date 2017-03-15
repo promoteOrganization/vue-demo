@@ -1,66 +1,71 @@
 <template>
 	<div class="handle-manufaction">
-    <el-tabs type="border-card">
-  <el-tab-pane label="未处理">
-     <el-table
-    :data="currentManufaction"
-    border
-    style="width: 100%"
-   >
-    <el-table-column
-      type="selection"
-      width="55">
-    </el-table-column>
-    <el-table-column
-      prop="id"
-      label="故障编号"
-      width="120">
-      <!-- <template scope="scope">{{ scope.row.id }}</template> -->
-    </el-table-column>
-    <el-table-column
-      prop="proposer"
-      label="故障提出者"
-      width="120">
-    </el-table-column>
-    <el-table-column
-      prop="proposeTime"
-      label="故障提出时间"
-      show-overflow-tooltip>
-    </el-table-column>
-    <el-table-column
-      prop="description"
-      label="故障描述"
-      show-overflow-tooltip>
-    </el-table-column>
-    <el-table-column
-      prop="level"
-      label="故障等级"
-      show-overflow-tooltip>
-    </el-table-column>
-    <el-table-column
-      prop="status"
-      label="故障状态"
-      show-overflow-tooltip>
-    </el-table-column>
-    <el-table-column
-      label="操作"
-      show-overflow-tooltip>
-      <template scope="scope">sdasa</template>
-    </el-table-column>
-  </el-table>
-  <br>
-  <el-pagination
-    @size-change="handleSizeChange"
-    @current-change="handleCurrentChange"
-    :current-page="currentPage"
-    :page-size="sizePerOnePage"
-    layout="total, prev, pager, next, jumper"
-    :total="totalCommentSize">
-  </el-pagination>
-  </el-tab-pane>
-  <el-tab-pane label="进行中">进行中</el-tab-pane>
-  <el-tab-pane label="已完成">已完成</el-tab-pane>
-  <el-tab-pane label="全部">全部</el-tab-pane>
+  <el-tabs type="border-card">
+    <el-tab-pane label="未处理">
+         <el-table
+        :data="currentManufaction"
+        border
+        style="width: 100%"
+        >
+            <el-table-column
+              type="selection"
+              width="55">
+            </el-table-column>
+            <el-table-column
+              prop="id"
+              label="故障编号"
+              width="175"
+              show-overflow-tooltip>
+              <!-- <template scope="scope">{{ scope.row.id }}</template> -->
+            </el-table-column>
+            <el-table-column
+              prop="proposer"
+              label="故障提出者"
+              width="120">
+            </el-table-column>
+            <el-table-column
+              prop="proposeTime"
+              label="故障提出时间"
+              width="200"
+              show-overflow-tooltip>
+            </el-table-column>
+            <el-table-column
+              prop="description"
+              label="故障描述"
+              width="222"
+              show-overflow-tooltip>
+            </el-table-column>
+            <el-table-column
+              prop="level"
+              label="故障等级"
+              width="100">
+            </el-table-column>
+            <el-table-column
+              prop="status"
+              label="故障状态"
+              width="100">
+            </el-table-column>
+            <el-table-column
+              label="操作"
+              width="95">
+              <template scope="scope"><el-button type="success">处理</el-button><br>
+            <el-button type="info">修改</el-button><br>
+            <el-button type="danger"></el-button></template>
+          </el-table-column>
+      </el-table>
+    <br>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-size="sizePerOnePage"
+        layout="total, prev, pager, next, jumper"
+        :total="totalCommentSize">
+      </el-pagination>
+    </el-tab-pane>
+    <el-tab-pane label="进行中">进行中</el-tab-pane>
+    <el-tab-pane label="已完成">已完成</el-tab-pane>
+    <el-tab-pane label="全部">全部</el-tab-pane>
 </el-tabs>
 	</div>
 </template>
@@ -107,11 +112,11 @@ export default {
       }
     },
     getUnsolvedManufaction: function () {
-      // var _this = this
-      manufactionApi.getManufaction()
+      var _this = this
+      manufactionApi.getManufaction('', '', '', '', '', '', '')
         .then(function (response) {
-          // _this.tableData = response.data.result.data
-          // _this.getCurrentManufaction(1)
+          _this.tableData = response.data.result.data
+          _this.getCurrentManufaction(1)
           console.log(response)
         })
         .catch(function (error) {

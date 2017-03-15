@@ -7,11 +7,11 @@ import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
-
+import moment from 'moment'
 Vue.config.productionTip = false
 Vue.use(MuseUI)
 Vue.use(ElementUI)
-
+Vue.use(moment)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
