@@ -1,0 +1,155 @@
+<template>
+  <div class="handled-manufaction">
+      <el-table
+        :data="currentManufaction"
+        border
+        style="width: 100%"
+        >
+            <el-table-column
+              prop="id"
+              label="故障编号"
+              width="132"
+              show-overflow-tooltip>
+              <!-- <template scope="scope">{{ scope.row.id }}</template> -->
+            </el-table-column>
+            <el-table-column
+              prop="proposer"
+              label="提出者"
+              width="90">
+            </el-table-column>
+            <el-table-column
+              prop="proposeTime"
+              label="提出时间"
+              width="115"
+              show-overflow-tooltip>
+            </el-table-column>
+            <el-table-column
+              prop="description"
+              label="描述"
+              width="112"
+              show-overflow-tooltip>
+            </el-table-column>
+            <el-table-column
+              prop="level"
+              label="等级"
+              width="70">
+            </el-table-column>
+            <el-table-column
+              prop="handler"
+              label="处理人"
+              width="90">
+            </el-table-column>
+            <el-table-column
+              prop="startTime"
+              label="开始时间"
+              width="100">
+            </el-table-column>
+            <el-table-column
+              prop="endTime"
+              label="结束时间"
+              width="100">
+            </el-table-column>
+            <el-table-column
+              prop="diagnosis"
+              label="诊断原因"
+              width="110">
+            </el-table-column>
+            <el-table-column
+              prop="prosessStep"
+              label="处理步骤"
+              width="110">
+            </el-table-column>
+            <el-table-column
+              prop="status"
+              label="状态"
+              width="80">
+            </el-table-column>
+            <el-table-column
+              label="操作"
+              width="90">
+              <template scope="scope">
+                <el-button type="danger">删除</el-button>
+              </template>
+          </el-table-column>
+      </el-table>
+    <br>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-size="sizePerOnePage"
+        layout="total, prev, pager, next, jumper"
+        :total="totalCommentSize">
+      </el-pagination>
+  </div>
+</template>
+
+<script>
+import manufactionApi from '../../api/manufactionApi'
+export default {
+  name: 'handled-manufaction',
+  created () {
+    this.getHandledManufaction()
+  },
+  data () {
+    return {
+      currentPage: 1,
+      sizePerOnePage: 8,
+      currentManufaction: [],
+      tableData: [],
+      fixedHeader: true,
+      selectable: true,
+      multiSelectable: true,
+      enableSelectAll: true,
+      showCheckbox: true,
+      height: '400px'
+    }
+  },
+  methods: {
+    handleSizeChange (val) {
+      console.log(val)
+    },
+    handleCurrentChange (val) {
+      this.currentPage = val
+      this.getCurrentManufaction(val)
+    },
+    getCurrentManufaction (page) {
+      var size = this.tableData.length
+
+      var startManufaction = this.sizePerOnePage * (page - 1)
+      var endManufaction = startManufaction + this.sizePerOnePage
+      endManufaction = endManufaction < size ? endManufaction : size
+      this.currentManufaction = []
+      for (var i = startManufaction; i < endManufaction; i++) {
+        this.currentManufaction.push(this.tableData[i])
+      }
+    },
+    getHandledManufaction: function () {
+      var _this = this
+      manufactionApi.getManufaction('', '', '', '', '', '', '')
+        .then(function (response) {
+          _this.tableData = response.data.result.data
+          _this.getCurrentManufaction(1)
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    }
+  },
+  computed: {
+    totalCommentSize () {
+      return this.tableData.length
+    }
+  }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="stylus" scoped>
+.other-view
+  width 1300px
+  height 600px
+  margin 0px auto
+  margin-top 20px
+</style>
