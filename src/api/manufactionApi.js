@@ -18,7 +18,7 @@ export default {
     })
   },
   updateManufaction (id) {
-    let url = manufactionApi.updateManufactionUrl() + '?id=' + id
+    let url = manufactionApi.updateManufactionUrl(id)
     return axios({
       method: 'put',
       url: url,
@@ -26,7 +26,7 @@ export default {
     })
   },
   deleteManufaction (id) {
-    let url = manufactionApi.deleteManufactionUrl() + '?id=' + id
+    let url = manufactionApi.deleteManufactionUrl(id)
     return axios({
       method: 'delete',
       url: url,
@@ -34,7 +34,7 @@ export default {
     })
   },
   getSingleManufaction (id) {
-    let url = manufactionApi.getSingleManufactionUrl() + '?id=' + id
+    let url = manufactionApi.getSingleManufactionUrl(id)
     return axios({
       method: 'get',
       url: url,
@@ -42,7 +42,7 @@ export default {
     })
   },
   handleManufactionStart (id) {
-    let url = manufactionApi.handleManufactionStartUrl() + '?id=' + id
+    let url = manufactionApi.handleManufactionStartUrl(id)
     return axios({
       method: 'put',
       url: url,
@@ -50,7 +50,7 @@ export default {
     })
   },
   handleManufactionConfirm (id) {
-    let url = manufactionApi.handleManufactionConfirmUrl() + '?id=' + id
+    let url = manufactionApi.handleManufactionConfirmUrl(id)
     return axios({
       method: 'put',
       url: url,

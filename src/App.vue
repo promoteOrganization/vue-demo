@@ -3,8 +3,8 @@
     <div class="header">
       <mu-appbar>
         <div class="inner">
-          <router-link to="/">首页</router-link>
-          <router-link to="/other">其它</router-link>
+          <router-link to="/">新增故障</router-link>
+          <router-link to="/table">故障表格</router-link>
         </div>
       </mu-appbar>
     </div>

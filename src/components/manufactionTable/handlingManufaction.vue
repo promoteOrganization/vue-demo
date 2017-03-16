@@ -59,7 +59,7 @@
               label="操作"
               width="95">
               <template scope="scope"><el-button type="success">完成</el-button><br>
-            <el-button type="danger">删除</el-button></template>
+            <el-button type="danger" @click="deleteManufaction(scope.row.id)">删除</el-button></template>
           </el-table-column>
       </el-table>
     <br>
@@ -120,11 +120,34 @@ export default {
         .then(function (response) {
           _this.tableData = response.data.result.data
           _this.getCurrentManufaction(1)
-          console.log(response)
         })
         .catch(function (error) {
           console.log(error)
         })
+    },
+    deleteManufaction (id) {
+      this.$confirm('此操作将永久删除该故障, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        var _this = this
+        manufactionApi.deleteManufaction(id)
+          .then(function (response) {
+            _this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消删除'
+        })
+      })
     }
   },
   computed: {

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import IndexView from '../views/IndexView.vue'
-import OtherView from '../views/OtherView.vue'
+import addManufactionView from '../views/addManufactionView.vue'
+import manufactionTableView from '../views/manufactionTableView.vue'
 
 Vue.use(Router)
 
@@ -9,11 +9,11 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: IndexView
+      component: addManufactionView
     },
     {
-      path: '/other',
-      component: OtherView
+      path: '/table',
+      component: manufactionTableView
     }
   ]
 })
