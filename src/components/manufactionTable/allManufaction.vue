@@ -34,77 +34,95 @@
       <el-table
         :data="currentManufaction"
         border
-        style="width: 100%"
+        style="width: 100%;text-align:center"
         >
             <el-table-column
               prop="id"
               label="编号"
               width="132"
-              show-overflow-tooltip>
-              <!-- <template scope="scope">{{ scope.row.id }}</template> -->
+              show-overflow-tooltip
+              align="center">
             </el-table-column>
             <el-table-column
               prop="proposer"
               label="提出者"
               width="100"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+              align="center">
             </el-table-column>
             <el-table-column
               prop="proposeTime"
               label="提出时间"
               width="120"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+              sortable
+              align="center">
             </el-table-column>
             <el-table-column
               prop="description"
               label="描述"
               width="120"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+              align="center">
             </el-table-column>
             <el-table-column
               prop="level"
               label="等级"
-              width="70">
+              width="70"
+              :formatter="levelFormatter"
+              align="center">
             </el-table-column>
             <el-table-column
               prop="handler"
               label="处理人"
-              width="80">
+              width="80"
+              align="center">
             </el-table-column>
             <el-table-column
               prop="startTime"
               label="开始时间"
-              width="100"
-              show-overflow-tooltip>
+              width="115"
+              show-overflow-tooltip
+              sortable
+              align="center">
             </el-table-column>
             <el-table-column
               prop="endTime"
               label="结束时间"
-              width="100"
-              show-overflow-tooltip>
+              width="115"
+              show-overflow-tooltip
+              sortable
+              align="center">
             </el-table-column>
             <el-table-column
               prop="diagnosis"
               label="诊断原因"
               width="100"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+              align="center">
             </el-table-column>
             <el-table-column
               prop="prosessStep"
               label="处理步骤"
               width="102"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+              align="center">
             </el-table-column>
             <el-table-column
               prop="status"
               label="状态"
-              width="80">
+              width="80"
+              :formatter="statusFormatter"
+              align="center">
             </el-table-column>
             <el-table-column
               label="操作"
-              width="95">
+              width="65"
+              align="center">
               <template scope="scope">
-                <el-button type="danger" @click="deleteManufaction(scope.row.id)">删除</el-button>
+              <el-tooltip class="item" effect="dark" content="删除故障" placement="top">
+                <i class="el-icon-delete" @click="deleteManufaction(scope.row.id)"></i>
+                </el-tooltip>
               </template>
           </el-table-column>
       </el-table>
@@ -129,19 +147,19 @@ export default {
   },
   data () {
     return {
-      currentPage: 1,
-      sizePerOnePage: 10,
-      currentManufaction: [],
-      tableData: [],
+      currentPage: 1, // 当前页数
+      sizePerOnePage: 10, // 每页数据条数
+      currentManufaction: [], // 当前故障
+      tableData: [], // 表格数据
       fixedHeader: true,
       selectable: true,
       multiSelectable: true,
       enableSelectAll: true,
       showCheckbox: true,
       height: '400px',
-      searchStartTime: '',
-      searchEndTime: '',
-      leveloptions: [{
+      searchStartTime: '', // 搜索开始时间
+      searchEndTime: '', // 搜索结束时间
+      leveloptions: [{ // 故障等级查询
         value: '',
         label: '故障等级'
       }, {
@@ -155,7 +173,7 @@ export default {
         label: '严重'
       }],
       levelValue: '',
-      searchInputOptions: [{
+      searchInputOptions: [{ // 时间类型查询
         value: '',
         label: '全部提出时间'
       }, {
@@ -172,7 +190,7 @@ export default {
     }
   },
   methods: {
-    level_select (item) {
+    level_select (item) { // 等级选择渲染表格数据
       var _this = this
       manufactionApi.getManufaction(item.value, '', '', '', '', '10', '0')
         .then(function (response) {
@@ -183,7 +201,35 @@ export default {
           console.log(error)
         })
     },
-    ymdFilter: function (value) {
+    levelFormatter (row, column) { // 等级格式化
+      if (row.level === 1) {
+        row.column = '严重'
+        return row.column
+      }
+      if (row.level === 2) {
+        row.column = '一般'
+        return row.column
+      }
+      if (row.level === 3) {
+        row.column = '轻微'
+        return row.column
+      }
+    },
+    statusFormatter (row, column) { // 状态格式化
+      if (row.status === 1) {
+        row.column = '未处理'
+        return row.column
+      }
+      if (row.status === 2) {
+        row.column = '进行中'
+        return row.column
+      }
+      if (row.status === 3) {
+        row.column = '已完成'
+        return row.column
+      }
+    },
+    ymdFilter: function (value) { // 年月日过滤器
       var date = new Date(value)
       var Y = date.getFullYear()
       var m = date.getMonth() + 1
@@ -197,14 +243,14 @@ export default {
       var t = Y + '-' + m + '-' + d
       return t
     },
-    handleSizeChange (val) {
+    handleSizeChange (val) { // 控制表格大小
       console.log(val)
     },
-    handleCurrentChange (val) {
+    handleCurrentChange (val) { // 控制当前页面改变
       this.currentPage = val
       this.getCurrentManufaction(val)
     },
-    getCurrentManufaction (page) {
+    getCurrentManufaction (page) { // 获得当前页面表格数据
       var size = this.tableData.length
 
       var startManufaction = this.sizePerOnePage * (page - 1)
@@ -215,7 +261,7 @@ export default {
         this.currentManufaction.push(this.tableData[i])
       }
     },
-    getAllManufaction: function () {
+    getAllManufaction: function () { // 获得已完成的故障数据
       var _this = this
       manufactionApi.getManufaction('', '', '', '', '', '', '')
         .then(function (response) {
@@ -226,7 +272,7 @@ export default {
           console.log(error)
         })
     },
-    deleteManufaction (id) {
+    deleteManufaction (id) { // 删除数据
       this.$confirm('此操作将永久删除该故障, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -256,7 +302,7 @@ export default {
         })
       })
     },
-    search () {
+    search () { // 点击搜索按钮触发搜索
       var startTime = this.ymdFilter(this.searchStartTime)
       var endTime = this.ymdFilter(this.searchEndTime)
       var _this = this
@@ -270,13 +316,13 @@ export default {
           console.log(error)
         })
     },
-    reform () {
+    reform () { // 重置按钮点击触发
       this.levelValue = ''
       this.searchType = ''
       this.searchStartTime = ''
       this.searchEndTime = ''
     },
-    tableRefresh () {
+    tableRefresh () { // 刷新按钮点击触发
       var _this = this
       manufactionApi.getManufaction('', '', '', '', '', '', '')
         .then(function (response) {
@@ -290,7 +336,7 @@ export default {
     }
   },
   computed: {
-    totalCommentSize () {
+    totalCommentSize () { // 计算表格数据长度
       return this.tableData.length
     }
   }
@@ -303,4 +349,6 @@ export default {
   width 100%
   height 40px
   float right
+.el-icon-delete:hover
+  cursor pointer
 </style>

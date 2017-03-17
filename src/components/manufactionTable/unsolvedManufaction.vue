@@ -34,49 +34,62 @@
       <el-table
         :data="currentManufaction"
         border
-        style="width: 100%"
+        style="width: 100%;text-align:center"
         >
             <el-table-column
               prop="id"
               label="故障编号"
               width="277"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+              align="center">
               <!-- <template scope="scope">{{ scope.row.id }}</template> -->
             </el-table-column>
             <el-table-column
               prop="proposer"
               label="故障提出者"
-              width="120">
+              width="120"
+              align="center">
             </el-table-column>
             <el-table-column
               prop="proposeTime"
               label="故障提出时间"
               width="200"
               sortable
-              show-overflow-tooltip>
+              show-overflow-tooltip
+              align="center">
             </el-table-column>
             <el-table-column
               prop="description"
               label="故障描述"
               width="300"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+              align="center">
             </el-table-column>
             <el-table-column
               prop="level"
               label="故障等级"
-              width="100">
+              width="100"
+              :formatter="levelFormatter"
+              align="center">
             </el-table-column>
             <el-table-column
               prop="status"
               label="故障状态"
-              width="107">
+              width="107"
+              :formatter="statusFormatter"
+              align="center">
             </el-table-column>
             <el-table-column
               label="操作"
-              width="95">
-              <template scope="scope"><el-button type="success" @click="handleManufaction(scope.row.id)">处理</el-button><br>
-            <el-button type="info" @click="updateManufaction(scope.row.id)">修改</el-button><br>
-            <el-button type="danger" @click="deleteManufaction(scope.row.id)">删除</el-button></template>
+              width="95"
+              align="center">
+              <template scope="scope">
+              <el-tooltip class="item" effect="dark" content="处理故障" placement="top">
+              <i class="el-icon-setting" @click="handleManufaction(scope.row.id)"></i>
+              </el-tooltip> 
+              <el-tooltip class="item" effect="dark" content="修改故障" placement="top"><i class="el-icon-edit" @click="updateManufaction(scope.row.id)"></i></el-tooltip> 
+              <el-tooltip class="item" effect="dark" content="删除故障" placement="top"><i class="el-icon-delete" @click="deleteManufaction(scope.row.id)"></i></el-tooltip>
+           </template>
           </el-table-column>
       </el-table>
     <br>
@@ -148,26 +161,27 @@ export default {
   },
   data () {
     return {
-      currentId: '',
-      searchStartTime: '',
-      searchEndTime: '',
-      currentPage: 1,
-      sizePerOnePage: 6,
-      currentManufaction: [],
-      tableData: [],
+      currentId: '', // 当前id
+      searchStartTime: '', // 搜索开始时间
+      searchEndTime: '',  // 搜索结束时间
+      currentPage: 1, // 当前页数
+      sizePerOnePage: 6, // 每页数据条数
+      currentManufaction: [], // 当前故障
+      tableData: [], // 表格数据
       fixedHeader: true,
       selectable: true,
       multiSelectable: true,
       enableSelectAll: true,
       showCheckbox: true,
       height: '400px',
-      handleManufactionDialogVisible: false,
+      handleManufactionDialogVisible: false, // 处理故障对话框
       updateManufactionDialogVisible: false,
-      handleManufactionForm: {
+      // 修改故障对话框
+      handleManufactionForm: { // 处理故障表单
         handler: '',
         diagnosis: ''
       },
-      handleRules: {
+      handleRules: { // 处理故障表单校验规则
         handler: [
           { required: true, message: '请输入活动名称', trigger: 'blur' }
         ],
@@ -175,14 +189,14 @@ export default {
           { required: true, message: '请选择活动区域', trigger: 'blur' }
         ]
       },
-      updateManufactionForm: {
+      updateManufactionForm: { // 修改故障表单
         proposer: '',
         proposeTime1: '',
         proposeTime2: '',
         description: '',
         level: ''
       },
-      updateRules: {
+      updateRules: { // 修改故障表单校验规则
         proposer: [
           { required: true, message: '请输入故障提出者', trigger: 'blur' }
         ],
@@ -199,7 +213,7 @@ export default {
           { required: true, message: '请选择故障等级', trigger: 'change' }
         ]
       },
-      leveloptions: [{
+      leveloptions: [{ // 故障等级查询
         value: '',
         label: '故障等级'
       }, {
@@ -213,7 +227,7 @@ export default {
         label: '严重'
       }],
       levelValue: '',
-      searchInputOptions: [{
+      searchInputOptions: [{ // 时间类型查询
         value: '',
         label: '全部提出时间'
       }, {
@@ -230,7 +244,7 @@ export default {
     }
   },
   methods: {
-    level_select (item) {
+    level_select (item) { // 等级选择渲染表格数据
       var _this = this
       manufactionApi.getManufaction(item.value, '1', '', '', '', '10', '0')
         .then(function (response) {
@@ -241,7 +255,35 @@ export default {
           console.log(error)
         })
     },
-    ymdFilter: function (value) {
+    levelFormatter (row, column) { // 等级格式化
+      if (row.level === 1) {
+        row.column = '严重'
+        return row.column
+      }
+      if (row.level === 2) {
+        row.column = '一般'
+        return row.column
+      }
+      if (row.level === 3) {
+        row.column = '轻微'
+        return row.column
+      }
+    },
+    statusFormatter (row, column) { // 状态格式化
+      if (row.status === 1) {
+        row.column = '未处理'
+        return row.column
+      }
+      if (row.status === 2) {
+        row.column = '进行中'
+        return row.column
+      }
+      if (row.status === 3) {
+        row.column = '已完成'
+        return row.column
+      }
+    },
+    ymdFilter: function (value) { // 年月日过滤器
       var date = new Date(value)
       var Y = date.getFullYear()
       var m = date.getMonth() + 1
@@ -255,7 +297,7 @@ export default {
       var t = Y + '-' + m + '-' + d
       return t
     },
-    hisFilter: function (value) {
+    hisFilter: function (value) { // 时分秒过滤器
       var date = new Date(value)
       var H = date.getHours()
       var i = date.getMinutes()
@@ -272,14 +314,14 @@ export default {
       var t = H + ':' + i + ':' + s
       return t
     },
-    handleSizeChange (val) {
+    handleSizeChange (val) { // 控制表格大小
       console.log(val)
     },
-    handleCurrentChange (val) {
+    handleCurrentChange (val) { // 控制当前页面改变
       this.currentPage = val
       this.getCurrentManufaction(val)
     },
-    getCurrentManufaction (page) {
+    getCurrentManufaction (page) { // 获得当前页面表格数据
       var size = this.tableData.length
 
       var startManufaction = this.sizePerOnePage * (page - 1)
@@ -290,7 +332,7 @@ export default {
         this.currentManufaction.push(this.tableData[i])
       }
     },
-    getUnsolvedManufaction: function () {
+    getUnsolvedManufaction: function () { // 获得未处理的故障数据
       console.log(this.levelValue)
       var _this = this
       manufactionApi.getManufaction(this.levelValue, '1', this.searchType, this.searchStartTime, this.searchEndTime, '10', '0')
@@ -302,7 +344,7 @@ export default {
           console.log(error)
         })
     },
-    deleteManufaction (id) {
+    deleteManufaction (id) { // 删除数据
       this.$confirm('此操作将永久删除该故障, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -332,17 +374,18 @@ export default {
         })
       })
     },
-    handleManufaction (id) {
+    handleManufaction (id) { // 弹出处理故障对话框
       this.currentId = id
       this.handleManufactionDialogVisible = true
     },
-    updateManufaction (id) {
+    updateManufaction (id) { // 弹出修改故障对话框
       this.currentId = id
       this.updateManufactionDialogVisible = true
       var _this = this
       manufactionApi.getSingleManufaction(id)
         .then(function (response) {
           _this.updateManufactionForm.proposer = response.data.result.proposer
+          console.log(response.data.result.proposeTime)
           _this.updateManufactionForm.description = response.data.result.description
           if (response.data.result.level === 1) {
             _this.updateManufactionForm.level = '严重'
@@ -358,7 +401,7 @@ export default {
           console.log(error)
         })
     },
-    submitHandleForm (formName) {
+    submitHandleForm (formName) { // 提交处理故障表单
       var _this = this
       manufactionApi.handleManufactionStart(this.currentId, this.handleManufactionForm.handler, this.handleManufactionForm.diagnosis)
         .then(function (response) {
@@ -387,7 +430,7 @@ export default {
         }
       })
     },
-    submitUpdateForm (formName) {
+    submitUpdateForm (formName) { // 提交修改故障表单
       var proposeTimeYMD = this.ymdFilter(this.updateManufactionForm.proposeTime1)
       var proposeTimeHIS = this.hisFilter(this.updateManufactionForm.proposeTime2)
       var proposeTime = proposeTimeYMD + ' ' + proposeTimeHIS
@@ -418,10 +461,10 @@ export default {
         }
       })
     },
-    resetForm (formName) {
+    resetForm (formName) { // 重置表单
       this.$refs[formName].resetFields()
     },
-    search () {
+    search () { // 点击搜索按钮触发搜索
       var startTime = this.ymdFilter(this.searchStartTime)
       var endTime = this.ymdFilter(this.searchEndTime)
       var _this = this
@@ -434,13 +477,13 @@ export default {
           console.log(error)
         })
     },
-    reform () {
+    reform () { // 重置按钮点击触发
       this.levelValue = ''
       this.searchType = ''
       this.searchStartTime = ''
       this.searchEndTime = ''
     },
-    tableRefresh () {
+    tableRefresh () { // 刷新按钮点击触发
       var _this = this
       manufactionApi.getManufaction('', '1', '', '', '', '', '')
         .then(function (response) {
@@ -453,7 +496,7 @@ export default {
     }
   },
   computed: {
-    totalCommentSize () {
+    totalCommentSize () { // 计算表格数据长度
       return this.tableData.length
     }
   }
@@ -466,4 +509,10 @@ export default {
   width 100%
   height 40px
   float right
+.el-icon-setting:hover
+  cursor pointer
+.el-icon-edit:hover
+  cursor pointer
+.el-icon-delete:hover
+  cursor pointer
 </style>
