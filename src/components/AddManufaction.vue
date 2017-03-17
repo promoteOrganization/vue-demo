@@ -121,6 +121,7 @@ export default {
               message: '新增成功',
               type: 'success'
             })
+            _this.resetForm('addManufactionForm')
           })
         .catch(function (error) {
           console.log(error)
