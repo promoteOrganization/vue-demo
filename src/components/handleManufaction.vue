@@ -7,8 +7,8 @@
     <el-tab-pane label="进行中" name="second">
       <handling-manufaction></handling-manufaction>
     </el-tab-pane>
-    <el-tab-pane label="已完成">
-      <handled-manufaction name="third"></handled-manufaction>
+    <el-tab-pane label="已完成" name="third">
+      <handled-manufaction></handled-manufaction>
     </el-tab-pane>
     <el-tab-pane label="全部" name="fourth">
       <all-manufaction></all-manufaction>
