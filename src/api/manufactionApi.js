@@ -10,18 +10,30 @@ export default {
       withCredentials: true
     })
   },
-  addManufaction () {
+  addManufaction (proposer, proposeTime, description, level) {
     return axios({
       method: 'post',
       url: manufactionApi.addManufactionUrl(),
+      data: {
+        proposer: proposer,
+        proposeTime: proposeTime,
+        description: description,
+        level: level
+      },
       withCredentials: true
     })
   },
-  updateManufaction (id) {
+  updateManufaction (id, levelUpdate, proposerUpdate, proposeTimeUpdate, descriptionUpdate) {
     let url = manufactionApi.updateManufactionUrl(id)
     return axios({
       method: 'put',
       url: url,
+      data: {
+        levelUpdate: levelUpdate,
+        proposerUpdate: proposerUpdate,
+        proposeTimeUpdate: proposeTimeUpdate,
+        descriptionUpdate: descriptionUpdate
+      },
       withCredentials: true
     })
   },
@@ -41,19 +53,26 @@ export default {
       withCredentials: true
     })
   },
-  handleManufactionStart (id) {
+  handleManufactionStart (id, handler, diagnosis) {
     let url = manufactionApi.handleManufactionStartUrl(id)
     return axios({
       method: 'put',
       url: url,
+      data: {
+        handler: handler,
+        diagnosis: diagnosis
+      },
       withCredentials: true
     })
   },
-  handleManufactionConfirm (id) {
+  handleManufactionConfirm (id, prosessStep) {
     let url = manufactionApi.handleManufactionConfirmUrl(id)
     return axios({
       method: 'put',
       url: url,
+      data: {
+        prosessStep: prosessStep
+      },
       withCredentials: true
     })
   }

@@ -23,7 +23,7 @@ export default {
 <style lang="stylus" scoped>
 .index-view
   width 800px
-  height 300px
+  height 400px
   margin 0px auto 
   margin-top 20px
   border 1px solid #ADADAD	

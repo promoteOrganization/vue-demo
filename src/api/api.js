@@ -10,7 +10,7 @@ export const manufactionApi = {
   // GET
   getSingleManufactionUrl: id => '/api/manufactions/' + id,
   // PUT
-  handleManufationStartUrl: id => '/api/manufactions/' + id + '/handleStart',
+  handleManufactionStartUrl: id => '/api/manufactions/handleStart/' + id,
   // PUT
-  handleManufactionConfirmUrl: id => '/api/manufactions/' + id + '/handleConfirm'
+  handleManufactionConfirmUrl: id => '/api/manufactions//handleConfirm/' + id
 }

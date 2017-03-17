@@ -1,5 +1,36 @@
 <template>
   <div class="unsolved-manufaction">
+      <div class="searchInput">
+        <el-select v-model="levelValue" placeholder="请选择故障等级">
+          <el-option
+          v-for="levelitem in leveloptions"
+          :value="levelitem.value"
+          :label="levelitem.label"
+          >
+            <div @click="level_select(levelitem)">{{levelitem.label}}</div>
+        </el-option>
+      </el-select>
+      <el-select v-model="searchType" placeholder="请选择">
+          <el-option
+          v-for="searchitem in searchInputOptions"
+          :label="searchitem.label"
+          :value="searchitem.value">
+        </el-option>
+      </el-select>
+      <el-date-picker
+        v-model="searchStartTime"
+        type="date"
+        placeholder="选择开始日期">
+      </el-date-picker>
+      <el-date-picker
+        v-model="searchEndTime"
+        type="date"
+        placeholder="选择结束日期">
+      </el-date-picker>
+      <el-button type="primary" @click="search">查询</el-button>
+      <el-button type="warning" @click="reform">重置</el-button>
+      <el-button type="success" @click="tableRefresh">刷新</el-button>
+      </div>
       <el-table
         :data="currentManufaction"
         border
@@ -21,6 +52,7 @@
               prop="proposeTime"
               label="故障提出时间"
               width="200"
+              sortable
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
@@ -61,11 +93,11 @@
           <el-form-item label="处理人" prop="handler">
             <el-input v-model="handleManufactionForm.handler"></el-input>
           </el-form-item>
-          <el-form-item label="故障诊断原因" prop="diagnosis">
+          <el-form-item label="诊断原因" prop="diagnosis">
             <el-input type="textarea" v-model="handleManufactionForm.diagnosis"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitHandleForm('handleManufactionForm')">立即创建</el-button>
+            <el-button type="primary" @click="submitHandleForm('handleManufactionForm')">提交</el-button>
             <el-button @click="resetForm('handleManufactionForm')">重置</el-button>
           </el-form-item>
         </el-form>
@@ -77,18 +109,18 @@
           </el-form-item>
           <el-form-item label="故障等级" prop="level">
             <el-select v-model="updateManufactionForm.level" placeholder="请选择故障等级">
-              <el-option label="区域一" value="3">轻微</el-option>
-              <el-option label="区域二" value="2">一般</el-option>
-              <el-option label="区域二" value="1">严重</el-option>
+              <el-option label="轻微" value="3"></el-option>
+              <el-option label="一般" value="2"></el-option>
+              <el-option label="严重" value="1"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="故障提出时间" required>
+          <el-form-item label="提出时间" required>
             <el-col :span="11">
               <el-form-item prop="proposeTime1">
                 <el-date-picker type="date" placeholder="选择日期" v-model="updateManufactionForm.proposeTime1" style="width: 100%;"></el-date-picker>
               </el-form-item>
             </el-col>
-            <el-col class="line" :span="2">-</el-col>
+            <el-col class="line" :span="2">------</el-col>
             <el-col :span="11">
               <el-form-item prop="proposeTime2">
                 <el-time-picker type="fixed-time" placeholder="选择时间" v-model="updateManufactionForm.proposeTime2" style="width: 100%;"></el-time-picker>
@@ -99,7 +131,7 @@
             <el-input type="textarea" v-model="updateManufactionForm.description"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitUpdateForm('updateManufactionForm')">立即创建</el-button>
+            <el-button type="primary" @click="submitUpdateForm('updateManufactionForm')">提交</el-button>
             <el-button @click="resetForm('updateManufactionForm')">重置</el-button>
           </el-form-item>
         </el-form>
@@ -117,8 +149,10 @@ export default {
   data () {
     return {
       currentId: '',
+      searchStartTime: '',
+      searchEndTime: '',
       currentPage: 1,
-      sizePerOnePage: 8,
+      sizePerOnePage: 6,
       currentManufaction: [],
       tableData: [],
       fixedHeader: true,
@@ -135,8 +169,7 @@ export default {
       },
       handleRules: {
         handler: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { required: true, message: '请输入活动名称', trigger: 'blur' }
         ],
         diagnosis: [
           { required: true, message: '请选择活动区域', trigger: 'blur' }
@@ -151,14 +184,13 @@ export default {
       },
       updateRules: {
         proposer: [
-          { required: true, message: '请输入故障提出者', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { required: true, message: '请输入故障提出者', trigger: 'blur' }
         ],
         proposeTime1: [
-          { type: 'date', required: true, message: '请选择年月日', trigger: 'change' }
+          { type: 'date', message: '请选择年月日', trigger: 'change' }
         ],
         proposeTime2: [
-          { type: 'date', required: true, message: '请选择时分秒', trigger: 'change' }
+          { type: 'date', message: '请选择时分秒', trigger: 'change' }
         ],
         description: [
           { required: true, message: '请填写故障描述', trigger: 'blur' }
@@ -166,10 +198,80 @@ export default {
         level: [
           { required: true, message: '请选择故障等级', trigger: 'change' }
         ]
-      }
+      },
+      leveloptions: [{
+        value: '',
+        label: '故障等级'
+      }, {
+        value: '3',
+        label: '轻微'
+      }, {
+        value: '2',
+        label: '一般'
+      }, {
+        value: '1',
+        label: '严重'
+      }],
+      levelValue: '',
+      searchInputOptions: [{
+        value: '',
+        label: '全部提出时间'
+      }, {
+        value: 'proposeTime',
+        label: '故障提出时间'
+      }, {
+        value: 'startTime',
+        label: '开始处理时间'
+      }, {
+        value: 'endTime',
+        label: '结束处理时间'
+      }],
+      searchType: ''
     }
   },
   methods: {
+    level_select (item) {
+      var _this = this
+      manufactionApi.getManufaction(item.value, '1', '', '', '', '10', '0')
+        .then(function (response) {
+          _this.tableData = response.data.result.data
+          _this.getCurrentManufaction(1)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+    ymdFilter: function (value) {
+      var date = new Date(value)
+      var Y = date.getFullYear()
+      var m = date.getMonth() + 1
+      var d = date.getDate()
+      if (m < 10) {
+        m = '0' + m
+      }
+      if (d < 10) {
+        d = '0' + d
+      }
+      var t = Y + '-' + m + '-' + d
+      return t
+    },
+    hisFilter: function (value) {
+      var date = new Date(value)
+      var H = date.getHours()
+      var i = date.getMinutes()
+      var s = date.getSeconds()
+      if (H < 10) {
+        H = '0' + H
+      }
+      if (i < 10) {
+        i = '0' + i
+      }
+      if (s < 10) {
+        s = '0' + s
+      }
+      var t = H + ':' + i + ':' + s
+      return t
+    },
     handleSizeChange (val) {
       console.log(val)
     },
@@ -189,8 +291,9 @@ export default {
       }
     },
     getUnsolvedManufaction: function () {
+      console.log(this.levelValue)
       var _this = this
-      manufactionApi.getManufaction('', '', '', '', '', '', '')
+      manufactionApi.getManufaction(this.levelValue, '1', this.searchType, this.searchStartTime, this.searchEndTime, '10', '0')
         .then(function (response) {
           _this.tableData = response.data.result.data
           _this.getCurrentManufaction(1)
@@ -208,13 +311,19 @@ export default {
         var _this = this
         manufactionApi.deleteManufaction(id)
           .then(function (response) {
-            _this.$message({
-              type: 'success',
-              message: '删除成功!'
+            _this.tableRefresh()
+            _this.$notify({
+              title: '成功',
+              message: '删除成功',
+              type: 'success'
             })
           })
           .catch(function (error) {
             console.log(error)
+            _this.$notify.error({
+              title: '错误',
+              message: '删除失败'
+            })
           })
       }).catch(() => {
         this.$message({
@@ -230,11 +339,48 @@ export default {
     updateManufaction (id) {
       this.currentId = id
       this.updateManufactionDialogVisible = true
+      var _this = this
+      manufactionApi.getSingleManufaction(id)
+        .then(function (response) {
+          _this.updateManufactionForm.proposer = response.data.result.proposer
+          _this.updateManufactionForm.description = response.data.result.description
+          if (response.data.result.level === 1) {
+            _this.updateManufactionForm.level = '严重'
+          }
+          if (response.data.result.level === 2) {
+            _this.updateManufactionForm.level = '一般'
+          }
+          if (response.data.result.level === 3) {
+            _this.updateManufactionForm.level = '轻微'
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     },
     submitHandleForm (formName) {
+      var _this = this
+      manufactionApi.handleManufactionStart(this.currentId, this.handleManufactionForm.handler, this.handleManufactionForm.diagnosis)
+        .then(function (response) {
+          _this.handleManufactionDialogVisible = false
+          _this.tableRefresh()
+          _this.handleManufactionForm.handler = ''
+          _this.handleManufactionForm.diagnosis = ''
+          _this.$notify({
+            title: '成功',
+            message: '故障开始处理',
+            type: 'success'
+          })
+        })
+        .catch(function (error) {
+          console.log(error)
+          _this.$notify.error({
+            title: '错误',
+            message: '处理失败'
+          })
+        })
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
         } else {
           console.log('error submit!!')
           return false
@@ -242,17 +388,68 @@ export default {
       })
     },
     submitUpdateForm (formName) {
+      var proposeTimeYMD = this.ymdFilter(this.updateManufactionForm.proposeTime1)
+      var proposeTimeHIS = this.hisFilter(this.updateManufactionForm.proposeTime2)
+      var proposeTime = proposeTimeYMD + ' ' + proposeTimeHIS
+      var _this = this
+      manufactionApi.updateManufaction(this.currentId, this.updateManufactionForm.level, this.updateManufactionForm.proposer, proposeTime, this.updateManufactionForm.description)
+        .then(function (response) {
+          _this.updateManufactionDialogVisible = false
+          _this.tableRefresh()
+          _this.$notify({
+            title: '成功',
+            message: '修改成功',
+            type: 'success'
+          })
+        })
+        .catch(function (error) {
+          console.log(error)
+          _this.$notify.error({
+            title: '错误',
+            message: '修改失败'
+          })
+        })
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          // alert('submit!')
         } else {
-          console.log('error submit!!')
+          // console.log('error submit!!')
           return false
         }
       })
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
+    },
+    search () {
+      var startTime = this.ymdFilter(this.searchStartTime)
+      var endTime = this.ymdFilter(this.searchEndTime)
+      var _this = this
+      manufactionApi.getManufaction(this.levelValue, '1', this.searchType, startTime, endTime, '10', '0')
+        .then(function (response) {
+          _this.tableData = response.data.result.data
+          _this.getCurrentManufaction(1)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+    reform () {
+      this.levelValue = ''
+      this.searchType = ''
+      this.searchStartTime = ''
+      this.searchEndTime = ''
+    },
+    tableRefresh () {
+      var _this = this
+      manufactionApi.getManufaction('', '1', '', '', '', '', '')
+        .then(function (response) {
+          _this.tableData = response.data.result.data
+          _this.getCurrentManufaction(1)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     }
   },
   computed: {
@@ -265,9 +462,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus" scoped>
-.other-view
-  width 1300px
-  height 600px
-  margin 0px auto
-  margin-top 20px
+.searchInput
+  width 100%
+  height 40px
+  float right
 </style>

@@ -13,7 +13,7 @@ export default {
   },
   data () {
     return {
-      msg: '这是其它页面'
+      msg: '这是故障表格页面'
     }
   }
 }
@@ -23,7 +23,7 @@ export default {
 <style lang="stylus" scoped>
 .other-view
   width 1400px
-  height 700px
+  height 900px
   margin 0px auto
   margin-top 20px
 </style>

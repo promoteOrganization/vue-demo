@@ -1,5 +1,36 @@
 <template>
   <div class="handled-manufaction">
+    <div class="searchInput">
+        <el-select v-model="levelValue" placeholder="请选择故障等级">
+          <el-option
+          v-for="levelitem in leveloptions"
+          :value="levelitem.value"
+          :label="levelitem.label"
+          >
+            <div @click="level_select(levelitem)">{{levelitem.label}}</div>
+        </el-option>
+      </el-select>
+      <el-select v-model="searchType" placeholder="请选择">
+          <el-option
+          v-for="searchitem in searchInputOptions"
+          :label="searchitem.label"
+          :value="searchitem.value">
+        </el-option>
+      </el-select>
+      <el-date-picker
+        v-model="searchStartTime"
+        type="date"
+        placeholder="选择开始日期">
+      </el-date-picker>
+      <el-date-picker
+        v-model="searchEndTime"
+        type="date"
+        placeholder="选择结束日期">
+      </el-date-picker>
+      <el-button type="primary" @click="search">查询</el-button>
+      <el-button type="warning" @click="reform">重置</el-button>
+      <el-button type="success" @click="tableRefresh">刷新</el-button>
+      </div>
       <el-table
         :data="currentManufaction"
         border
@@ -15,7 +46,8 @@
             <el-table-column
               prop="proposer"
               label="提出者"
-              width="90">
+              width="90"
+              show-overflow-tooltip>
             </el-table-column>
             <el-table-column
               prop="proposeTime"
@@ -42,12 +74,14 @@
             <el-table-column
               prop="startTime"
               label="开始时间"
-              width="100">
+              width="100"
+              show-overflow-tooltip>
             </el-table-column>
             <el-table-column
               prop="endTime"
               label="结束时间"
-              width="100">
+              width="100"
+              show-overflow-tooltip>
             </el-table-column>
             <el-table-column
               prop="diagnosis"
@@ -102,10 +136,65 @@ export default {
       multiSelectable: true,
       enableSelectAll: true,
       showCheckbox: true,
-      height: '400px'
+      height: '400px',
+      searchStartTime: '',
+      searchEndTime: '',
+      leveloptions: [{
+        value: '',
+        label: '故障等级'
+      }, {
+        value: '3',
+        label: '轻微'
+      }, {
+        value: '2',
+        label: '一般'
+      }, {
+        value: '1',
+        label: '严重'
+      }],
+      levelValue: '',
+      searchInputOptions: [{
+        value: '',
+        label: '全部提出时间'
+      }, {
+        value: 'proposeTime',
+        label: '故障提出时间'
+      }, {
+        value: 'startTime',
+        label: '开始处理时间'
+      }, {
+        value: 'endTime',
+        label: '结束处理时间'
+      }],
+      searchType: ''
     }
   },
   methods: {
+    level_select (item) {
+      var _this = this
+      manufactionApi.getManufaction(item.value, '3', '', '', '', '10', '0')
+        .then(function (response) {
+          _this.tableData = response.data.result.data
+          _this.getCurrentManufaction(1)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+    ymdFilter: function (value) {
+      var date = new Date(value)
+      var Y = date.getFullYear()
+      var m = date.getMonth() + 1
+      var d = date.getDate()
+      if (m < 10) {
+        m = '0' + m
+      }
+      if (d < 10) {
+        d = '0' + d
+      }
+      var t = Y + '-' + m + '-' + d
+      return t
+    },
     handleSizeChange (val) {
       console.log(val)
     },
@@ -126,7 +215,7 @@ export default {
     },
     getHandledManufaction: function () {
       var _this = this
-      manufactionApi.getManufaction('', '', '', '', '', '', '')
+      manufactionApi.getManufaction('', '3', '', '', '', '', '')
         .then(function (response) {
           _this.tableData = response.data.result.data
           _this.getCurrentManufaction(1)
@@ -144,13 +233,19 @@ export default {
         var _this = this
         manufactionApi.deleteManufaction(id)
           .then(function (response) {
-            _this.$message({
-              type: 'success',
-              message: '删除成功!'
+            _this.tableRefresh()
+            _this.$notify({
+              title: '成功',
+              message: '删除成功',
+              type: 'success'
             })
           })
           .catch(function (error) {
             console.log(error)
+            _this.$notify.error({
+              title: '错误',
+              message: '删除失败'
+            })
           })
       }).catch(() => {
         this.$message({
@@ -158,6 +253,38 @@ export default {
           message: '取消删除'
         })
       })
+    },
+    search () {
+      var startTime = this.ymdFilter(this.searchStartTime)
+      var endTime = this.ymdFilter(this.searchEndTime)
+      var _this = this
+      manufactionApi.getManufaction(this.levelValue, '3', this.searchType, startTime, endTime, '10', '0')
+        .then(function (response) {
+          _this.tableData = response.data.result.data
+          _this.getCurrentManufaction(1)
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+    reform () {
+      this.levelValue = ''
+      this.searchType = ''
+      this.searchStartTime = ''
+      this.searchEndTime = ''
+    },
+    tableRefresh () {
+      var _this = this
+      manufactionApi.getManufaction('', '3', '', '', '', '', '')
+        .then(function (response) {
+          _this.tableData = response.data.result.data
+          _this.getCurrentManufaction(1)
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     }
   },
   computed: {
@@ -170,9 +297,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus" scoped>
-.other-view
-  width 1300px
-  height 600px
-  margin 0px auto
-  margin-top 20px
+.searchInput
+  width 100%
+  height 40px
+  float right
 </style>
