@@ -144,7 +144,7 @@ export default {
     return {
       currentId: '', // 当前id
       currentPage: 1, // 当前页数
-      sizePerOnePage: 8, // 每页数据条数
+      sizePerOnePage: 10, // 每页数据条数
       currentManufaction: [], // 当前故障
       tableData: [], // 表格数据
       fixedHeader: true,

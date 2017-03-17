@@ -23,7 +23,7 @@ export default {
 <style lang="stylus" scoped>
 .other-view
   width 1400px
-  height 900px
+  height 650px
   margin 0px auto
   margin-top 20px
 </style>

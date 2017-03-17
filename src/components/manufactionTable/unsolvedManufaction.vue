@@ -165,7 +165,7 @@ export default {
       searchStartTime: '', // 搜索开始时间
       searchEndTime: '',  // 搜索结束时间
       currentPage: 1, // 当前页数
-      sizePerOnePage: 6, // 每页数据条数
+      sizePerOnePage: 10, // 每页数据条数
       currentManufaction: [], // 当前故障
       tableData: [], // 表格数据
       fixedHeader: true,
