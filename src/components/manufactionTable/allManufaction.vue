@@ -76,7 +76,8 @@
               prop="handler"
               label="处理人"
               width="80"
-              align="center">
+              align="center"
+              :formatter = "handlerFormatter">
             </el-table-column>
             <el-table-column
               prop="startTime"
@@ -84,7 +85,8 @@
               width="115"
               show-overflow-tooltip
               sortable
-              align="center">
+              align="center"
+              :formatter="startTimeFormatter">
             </el-table-column>
             <el-table-column
               prop="endTime"
@@ -92,21 +94,24 @@
               width="115"
               show-overflow-tooltip
               sortable
-              align="center">
+              align="center"
+              :formatter="endTimeFormatter">
             </el-table-column>
             <el-table-column
               prop="diagnosis"
               label="诊断原因"
               width="100"
               show-overflow-tooltip
-              align="center">
+              align="center"
+              :formatter="diagnosisFormatter">
             </el-table-column>
             <el-table-column
               prop="prosessStep"
               label="处理步骤"
               width="102"
               show-overflow-tooltip
-              align="center">
+              align="center"
+              :formatter="prosessStepFormatter">
             </el-table-column>
             <el-table-column
               prop="status"
@@ -229,6 +234,46 @@ export default {
         return row.column
       }
     },
+    handlerFormatter (row, column) {
+      if (row.handler === undefined) {
+        return '-'
+      }
+      if (row.handler !== undefined) {
+        return row.handler
+      }
+    },
+    startTimeFormatter (row, column) {
+      if (row.startTime === null) {
+        return '-'
+      }
+      if (row.startTime !== null) {
+        return row.startTime
+      }
+    },
+    endTimeFormatter (row, column) {
+      if (row.endTime === null) {
+        return '-'
+      }
+      if (row.endTime !== null) {
+        return row.endTime
+      }
+    },
+    diagnosisFormatter (row, column) {
+      if (row.diagnosis === undefined) {
+        return '-'
+      }
+      if (row.diagnosis !== undefined) {
+        return row.diagnosis
+      }
+    },
+    prosessStepFormatter (row, column) {
+      if (row.prosessStep === undefined) {
+        return '-'
+      }
+      if (row.prosessStep !== undefined) {
+        return row.prosessStep
+      }
+    },
     ymdFilter: function (value) { // 年月日过滤器
       var date = new Date(value)
       var Y = date.getFullYear()
@@ -310,7 +355,6 @@ export default {
         .then(function (response) {
           _this.tableData = response.data.result.data
           _this.getCurrentManufaction(1)
-          console.log(response)
         })
         .catch(function (error) {
           console.log(error)
@@ -328,7 +372,6 @@ export default {
         .then(function (response) {
           _this.tableData = response.data.result.data
           _this.getCurrentManufaction(1)
-          console.log(response)
         })
         .catch(function (error) {
           console.log(error)
