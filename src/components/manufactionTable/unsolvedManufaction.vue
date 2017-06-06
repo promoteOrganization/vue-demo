@@ -385,7 +385,6 @@ export default {
       manufactionApi.getSingleManufaction(id)
         .then(function (response) {
           _this.updateManufactionForm.proposer = response.data.result.proposer
-          console.log(response.data.result.proposeTime)
           _this.updateManufactionForm.description = response.data.result.description
           if (response.data.result.level === 1) {
             _this.updateManufactionForm.level = '严重'
@@ -434,6 +433,7 @@ export default {
       var proposeTimeYMD = this.ymdFilter(this.updateManufactionForm.proposeTime1)
       var proposeTimeHIS = this.hisFilter(this.updateManufactionForm.proposeTime2)
       var proposeTime = proposeTimeYMD + ' ' + proposeTimeHIS
+      console.log(proposeTime)
       var _this = this
       manufactionApi.updateManufaction(this.currentId, this.updateManufactionForm.level, this.updateManufactionForm.proposer, proposeTime, this.updateManufactionForm.description)
         .then(function (response) {
