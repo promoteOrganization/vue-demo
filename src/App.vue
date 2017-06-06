@@ -6,6 +6,7 @@
           <router-link to="/">新增故障</router-link>
           <router-link to="/table">故障表格</router-link>
         </div>
+        <mu-flat-button color="white" label="登录" slot="right" @click="login"/>
       </mu-appbar>
     </div>
     <transition name="fade" mode="out-in">
@@ -16,7 +17,12 @@
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  methods: {
+    login () {
+      this.$router.push('/login')
+    }
+  }
 }
 </script>
 
