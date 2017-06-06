@@ -19,8 +19,9 @@ Vue.use(moment)
 // 当然，如果session保存到vuex的话除外
 Vue.prototype.setCookie = (cName, value, expiredays) => {
   let exdate = new Date()
-  exdate.setDate(exdate.getDate() + expiredays)
-  document.cookie = cName + '=' + escape(value) + ((expiredays == null) ? '' : ';expires=' + exdate.toGMTString())
+  exdate.setTime(exdate.getTime() + expiredays)
+  var expires = 'expires=' + exdate.toGMTString()
+  document.cookie = cName + '=' + escape(value) + '; ' + expires
 }
 
 // 获取cookie、
@@ -28,7 +29,7 @@ function getCookie (name) {
   let arr = new RegExp('(^| )' + name + '=([^;]*)(;|$)')
   let reg = new RegExp('(^| )' + name + '=([^;]*)(;|$)')
   if (arr === document.cookie.match(reg)) {
-    return arr[2]
+    return unescape(arr[2])
   } else {
     return null
   }

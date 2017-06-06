@@ -5,7 +5,7 @@
       <el-input v-model="ruleForm.account"></el-input>
     </el-form-item>
     <el-form-item label="密码" prop="password">
-      <el-input v-model="ruleForm.password"></el-input>
+      <el-input v-model="ruleForm.password" type="password"></el-input>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
@@ -34,18 +34,28 @@ export default {
     }
   },
   methods: {
+    login () {
+      if (this.ruleForm.account !== '' && this.ruleForm.password !== '') {
+        this.toLogin()
+      }
+    },
+    toLogin () {
+      // 演示用
+      // 登录状态15天后过期
+      let expireDays = 1000 * 60 * 60 * 24 * 15
+      this.setCookie('session', 'blablablablabla...', expireDays)
+      this.isLoging = false
+      // 登录成功后
+      this.$router.push('/table')
+    },
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          this.login()
         } else {
-          console.log('error submit!!')
           return false
         }
       })
-    },
-    resetForm (formName) {
-      this.$refs[formName].resetFields()
     }
   }
 }

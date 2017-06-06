@@ -18,9 +18,31 @@
 <script>
 export default {
   name: 'app',
+  data () {
+    return {
+      userInfo: { // 保存用户信息
+        nick: null,
+        ulevel: null,
+        uid: null,
+        portrait: null
+      }
+    }
+  },
+  mounted () {
+    this.getUserInfo()
+  },
   methods: {
     login () {
       this.$router.push('/login')
+    },
+    getUserInfo () {
+      this.userInfo = {
+        nick: 'Doterlin',
+        ulevel: 20,
+        uid: '10000',
+        portrait: '#'
+      }
+      this.$store.commit('UPDATEUSER', this.userInfo)
     }
   }
 }
