@@ -54,6 +54,9 @@ new Vue({
   store,
   template: '<App/>',
   components: { App },
+  watch: {
+    '$route': 'checkLogin'
+  },
   created () {
     this.checkLogin()
   },
@@ -62,8 +65,6 @@ new Vue({
       // 检查是否存在session
       if (!this.getCookie('session')) {
         this.$router.push('/login')
-      } else {
-        this.$router.push('/')
       }
     }
   }

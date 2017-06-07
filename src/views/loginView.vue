@@ -31,6 +31,12 @@ export default {
         password: [
           { required: true, message: '请输入账户密码', trigger: 'blur' }
         ]
+      },
+      userInfo: { // 保存用户信息
+        nick: null,
+        ulevel: null,
+        uid: null,
+        portrait: null
       }
     }
   },
@@ -41,14 +47,20 @@ export default {
       }
     },
     toLogin () {
+      this.userInfo = {
+        nick: 'Doterlin',
+        ulevel: 20,
+        uid: '10000',
+        portrait: '#'
+      }
       // 演示用
       // 登录状态15天后过期
       let expireDays = 1000 * 60 * 60 * 24 * 15
       let value = this.ruleForm.account
       this.setCookie('session', value, expireDays)
-      this.isLoging = false
+      this.$store.commit('DOLOGIN', this.userInfo)
       // 登录成功后
-      this.$router.push('/table')
+      this.$router.push('/')
     },
     userLogin (formName) {
       this.$refs[formName].validate((valid) => {

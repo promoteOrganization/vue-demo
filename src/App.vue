@@ -6,7 +6,16 @@
           <router-link to="/">新增故障</router-link>
           <router-link to="/table">故障表格</router-link>
         </div>
-        <mu-flat-button color="white" :label="loginButtonLabel" slot="right" @click="login"/>
+        <mu-flat-button v-if="!loginStatus" color="white" :label="loginButtonLabel" slot="right" @click="login"/>
+        <mu-flat-button v-if="loginStatus" color="white" slot="right" label="茧" @click="toggle()" />
+          <mu-drawer right :open="open" @close="toggle()">
+            <mu-appbar title="个人中心">
+              <mu-icon-button icon='menu' slot="left" @click="toggle()"/>
+            </mu-appbar>
+            <mu-list>
+              <mu-list-item @click="loginOut" title="退出登录"/>
+            </mu-list>
+          </mu-drawer>
       </mu-appbar>
     </div>
     <transition name="fade" mode="out-in">
@@ -20,7 +29,7 @@ export default {
   name: 'app',
   data () {
     return {
-      loginButtonLabel: '',
+      open: false,
       session: '',
       userInfo: { // 保存用户信息
         nick: null,
@@ -31,34 +40,45 @@ export default {
     }
   },
   created () {
-    this.sessionWatch()
+    this.label()
   },
   mounted () {
     this.getUserInfo()
   },
+  computed: {
+    loginStatus () {
+      return this.$store.state.user.login
+    },
+    loginButtonLabel () {
+      return this.$store.state.user.login ? '' : '登录/注册'
+    }
+  },
   methods: {
+    toggle () {
+      this.open = !this.open
+    },
     login () {
       if (this.loginButtonLabel == '登录/注册') {
         this.$router.push('/login');
-      } else {
-        this.delCookie('session');
-        this.$router.push('/login');
       }
     },
-    getUserInfo () {
+    loginOut () {
       this.userInfo = {
-        nick: 'Doterlin',
+        nick: 'DoterlinD',
         ulevel: 20,
         uid: '10000',
         portrait: '#'
       }
-      this.$store.commit('UPDATEUSER', this.userInfo)
+      this.delCookie('session');
+      this.$store.commit('UPDATEUSER', this.userInfo);
+      this.$router.push('/');
+      this.toggle()
     },
-    sessionWatch () {
+    label () {
       if (!this.getCookie('session')) {
-        this.loginButtonLabel = '登录/注册'
+        this.loginStatus = false
       } else {
-        this.loginButtonLabel = '注销'
+        this.loginStatus = true
       }
     }
   }

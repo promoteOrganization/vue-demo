@@ -19,22 +19,19 @@
     </mu-step>
   </mu-stepper>
   <div class="demo-step-content">
-    <p v-if="finished">
-      都完成啦!<a href="javascript:;" @click="reset">点这里</a>可以重置
-    </p>
     <template v-if="!finished">
       <div v-if="activeStep == 0" class="register-step-one">
         <mu-text-field v-model="registerEmail" label="输入邮箱" :errorText="errorEmailText" labelFloat/>
       </div>
       <div v-if="activeStep == 1" class="register-step-two">
-        <mu-text-field v-model="registerPass" label="输入密码" :errorText="errorPassText" labelFloat/>
-        <mu-text-field v-model="registerRePass" label="再次输入" :errorText="errorRePassText" labelFloat/>
+        <mu-text-field v-model="registerPass" label="输入密码" :errorText="errorPassText" type="password" labelFloat/>
+        <mu-text-field v-model="registerRePass" label="再次输入" :errorText="errorRePassText" type="password" labelFloat/>
       </div>
       <div v-if="activeStep == 2" class="register-step-three">
-        <mu-text-field label="恭喜" errorText="errorText" labelFloat/>
+        <span>恭喜您已经完成注册</span>
       </div>
       <div class="register-button">
-        <mu-flat-button class="demo-step-button" label="上一步" :disabled="activeStep === 0" @click="handlePrev"/>
+        <mu-flat-button class="demo-step-button" label="上一步" :disabled="activeStep === 0 || activeStep === 2" @click="handlePrev"/>
         <mu-raised-button class="demo-step-button" :label="activeStep === 2 ? '完成' : '下一步'" primary @click="handleNext"/>
       </div>
     </template>
@@ -84,6 +81,15 @@ export default {
         }  else {
           this.activeStep++
         }
+      } else if (this.activeStep == 2) {
+        // 演示用
+        // 登录状态15天后过期
+        let expireDays = 1000 * 60 * 60 * 24 * 15
+        let value = this.registerEmail
+        this.setCookie('session', value, expireDays)
+        this.isLoging = false
+        // 登录成功后
+        this.$router.push('/')
       }
     },
     handlePrev () {
@@ -97,7 +103,6 @@ export default {
       this.errorEmailText = '';
       this.errorPassText = '';
       this.errorRePassText = '';
-      this.registerEmail = '';
       this.registerPass = '';
       this.registerRePass = '';
     }
@@ -132,7 +137,7 @@ export default {
   
 .register-step-three
   width 300px
-  margin 0px auto
+  margin-left 220px
   
 .register-button
   width 300px
