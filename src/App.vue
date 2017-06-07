@@ -6,7 +6,7 @@
           <router-link to="/">新增故障</router-link>
           <router-link to="/table">故障表格</router-link>
         </div>
-        <mu-flat-button color="white" label="登录" slot="right" @click="login"/>
+        <mu-flat-button color="white" :label="loginButtonLabel" slot="right" @click="login"/>
       </mu-appbar>
     </div>
     <transition name="fade" mode="out-in">
@@ -20,6 +20,8 @@ export default {
   name: 'app',
   data () {
     return {
+      loginButtonLabel: '',
+      session: '',
       userInfo: { // 保存用户信息
         nick: null,
         ulevel: null,
@@ -28,12 +30,20 @@ export default {
       }
     }
   },
+  created () {
+    this.sessionWatch()
+  },
   mounted () {
     this.getUserInfo()
   },
   methods: {
     login () {
-      this.$router.push('/login')
+      if (this.loginButtonLabel == '登录/注册') {
+        this.$router.push('/login');
+      } else {
+        this.delCookie('session');
+        this.$router.push('/login');
+      }
     },
     getUserInfo () {
       this.userInfo = {
@@ -43,6 +53,13 @@ export default {
         portrait: '#'
       }
       this.$store.commit('UPDATEUSER', this.userInfo)
+    },
+    sessionWatch () {
+      if (!this.getCookie('session')) {
+        this.loginButtonLabel = '登录/注册'
+      } else {
+        this.loginButtonLabel = '注销'
+      }
     }
   }
 }

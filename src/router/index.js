@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import addManufactionView from '../views/addManufactionView.vue'
 import manufactionTableView from '../views/manufactionTableView.vue'
 import loginView from '../views/loginView.vue'
+import registerView from '../views/registerView.vue'
 
 Vue.use(Router)
 
@@ -19,6 +20,10 @@ export default new Router({
     {
       path: '/login',
       component: loginView
+    },
+    {
+      path: '/register',
+      component: registerView
     }
   ]
 })

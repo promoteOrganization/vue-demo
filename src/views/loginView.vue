@@ -8,7 +8,8 @@
       <el-input v-model="ruleForm.password" type="password"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+      <el-button type="primary" @click="userLogin('ruleForm')">登录</el-button>
+      <el-button @click="register()">注册</el-button>
     </el-form-item>
   </el-form>
   </div>
@@ -43,12 +44,13 @@ export default {
       // 演示用
       // 登录状态15天后过期
       let expireDays = 1000 * 60 * 60 * 24 * 15
-      this.setCookie('session', 'blablablablabla...', expireDays)
+      let value = this.ruleForm.account
+      this.setCookie('session', value, expireDays)
       this.isLoging = false
       // 登录成功后
       this.$router.push('/table')
     },
-    submitForm (formName) {
+    userLogin (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.login()
@@ -56,6 +58,9 @@ export default {
           return false
         }
       })
+    },
+    register () {
+      this.$router.push('/register')
     }
   }
 }
@@ -66,8 +71,6 @@ export default {
   width 600px
   height 280px
   margin 0px auto 
-  margin-top 20px
+  margin-top 50px
   padding-top 50px
-  border 1px solid #ADADAD  
-  border-radius 5px
 </style>

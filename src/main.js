@@ -21,14 +21,15 @@ Vue.prototype.setCookie = (cName, value, expiredays) => {
   let exdate = new Date()
   exdate.setTime(exdate.getTime() + expiredays)
   var expires = 'expires=' + exdate.toGMTString()
-  document.cookie = cName + '=' + escape(value) + '; ' + expires
+  document.cookie = cName + '=' + escape(value)
+  document.cookie = expires
 }
 
-// 获取cookie、
+// 获取cookie
 function getCookie (name) {
   let arr = new RegExp('(^| )' + name + '=([^;]*)(;|$)')
   let reg = new RegExp('(^| )' + name + '=([^;]*)(;|$)')
-  if (arr === document.cookie.match(reg)) {
+  if (arr = document.cookie.match(reg)) {
     return unescape(arr[2])
   } else {
     return null
@@ -53,9 +54,6 @@ new Vue({
   store,
   template: '<App/>',
   components: { App },
-  watch: {
-    '$route': 'checkLogin'
-  },
   created () {
     this.checkLogin()
   },
@@ -65,7 +63,7 @@ new Vue({
       if (!this.getCookie('session')) {
         this.$router.push('/login')
       } else {
-        this.$router.push('/table')
+        this.$router.push('/')
       }
     }
   }
