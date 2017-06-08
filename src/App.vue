@@ -6,7 +6,7 @@
           <router-link to="/">新增故障</router-link>
           <router-link to="/table">故障表格</router-link>
         </div>
-        <mu-flat-button v-if="!loginStatus" color="white" :label="loginButtonLabel" slot="right" @click="login"/>
+        <mu-flat-button v-if="!loginStatus" color="white" label="登录/注册" slot="right" @click="login"/>
         <mu-flat-button v-if="loginStatus" color="white" slot="right" label="茧" @click="toggle()" />
           <mu-drawer right :open="open" @close="toggle()">
             <mu-appbar title="个人中心">
@@ -39,15 +39,12 @@ export default {
       }
     }
   },
-  created () {
-    this.label()
-  },
   computed: {
-    loginStatus () {
-      return this.$store.state.user.login
+    localStorage () {
+      return JSON.parse(window.localStorage.user  || '[]')
     },
-    loginButtonLabel () {
-      return this.$store.state.user.login ? '' : '登录/注册'
+    loginStatus () {
+      return this.localStorage.login ? this.localStorage.login : this.$store.state.user.login
     }
   },
   methods: {
@@ -68,15 +65,8 @@ export default {
       }
       this.delCookie('session');
       this.$store.commit('UPDATEUSER', this.userInfo);
-      this.$router.push('/');
+      this.$router.push('/login');
       this.toggle()
-    },
-    label () {
-      if (!this.getCookie('session')) {
-        this.loginStatus = false
-      } else {
-        this.loginStatus = true
-      }
     }
   }
 }

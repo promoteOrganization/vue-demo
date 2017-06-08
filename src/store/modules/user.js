@@ -14,11 +14,13 @@ const state = {
 const mutations = {
   [types.DOLOGIN] (state, userInfo) {
     state.login = true;
-    state.userInfo = userInfo
+    state.userInfo = userInfo;
+    window.localStorage.setItem('user', JSON.stringify(state))
   },
   [types.UPDATEUSER] (state, newUser) {
     state.login = false;
-    state.userInfo = newUser
+    state.userInfo = newUser;
+    window.localStorage.removeItem('user')
   }
 }
 
