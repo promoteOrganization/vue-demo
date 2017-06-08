@@ -41,9 +41,11 @@ export default {
   },
   computed: {
     localStorage () {
-      return JSON.parse(window.localStorage.user  || '[]')
+      // window.localStorege.user转换为json
+      return JSON.parse(window.localStorage.user || '[]')
     },
     loginStatus () {
+      // 当存在本地保存的登录状态则使用本地登录状态 ,如果登出则本地登录状态被撤回此时使用store保存的状态
       return this.localStorage.login ? this.localStorage.login : this.$store.state.user.login
     }
   },
