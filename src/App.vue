@@ -42,9 +42,6 @@ export default {
   created () {
     this.label()
   },
-  mounted () {
-    this.getUserInfo()
-  },
   computed: {
     loginStatus () {
       return this.$store.state.user.login
