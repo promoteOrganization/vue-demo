@@ -54,9 +54,6 @@ new Vue({
   store,
   template: '<App/>',
   components: { App },
-  watch: {
-    '$route': 'checkLogin'
-  },
   created () {
     this.checkLogin()
   },
