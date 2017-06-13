@@ -65,7 +65,7 @@ export default {
         uid: '10000',
         portrait: '#'
       }
-      this.delCookie('session');
+      this.delCookie('uid');
       this.$store.commit('UPDATEUSER', this.userInfo);
       this.$router.push('/login');
       this.toggle()

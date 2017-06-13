@@ -22,6 +22,7 @@
     <template v-if="!finished">
       <div v-if="activeStep == 0" class="register-step-one">
         <mu-text-field v-model="registerEmail" label="输入邮箱" :errorText="errorEmailText" labelFloat/>
+        // TODO 邮件发送验证码
       </div>
       <div v-if="activeStep == 1" class="register-step-two">
         <mu-text-field v-model="registerPass" label="输入密码" :errorText="errorPassText" type="password" labelFloat/>

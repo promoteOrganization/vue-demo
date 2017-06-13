@@ -57,7 +57,7 @@ export default {
       // 登录状态15天后过期
       let expireDays = 1000 * 60 * 60 * 24 * 15
       let value = this.ruleForm.account
-      this.setCookie('session', value, expireDays)
+      this.setCookie('uid', value, expireDays)
       this.$store.commit('DOLOGIN', this.userInfo)
       // 登录成功后
       this.$router.push('/')

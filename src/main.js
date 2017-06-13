@@ -60,7 +60,7 @@ new Vue({
   methods: {
     checkLogin () {
       // 检查是否存在session
-      if (!this.getCookie('session')) {
+      if (!this.getCookie('uid')) {
         this.$router.push('/login')
       }
     }
