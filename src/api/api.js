@@ -14,3 +14,25 @@ export const manufactionApi = {
   // PUT
   handleManufactionConfirmUrl: id => '/api/manufactions//handleConfirm/' + id
 }
+
+export const userApi = {
+  // GET
+  getUserUrl: () => '/api/users',
+  // POST
+  addUserUrl: () => '/api/users',
+  // PUT
+  updateUserUrl: id => '/api/users/' + id,
+  // DELETE
+  deleteUserUrl: id => '/api/users/' + id,
+  // GET
+  getSingleUserUrl: id => '/api/users/' + id,
+  // GET
+  getUserListUrl: id => '/api/users/userList/'
+}
+
+export const authApi = {
+  // POST
+  loginUrl: () => 'api/auth/login',
+  // GET
+  loginOutUrl: () => 'api/auth/loginOut'
+}
