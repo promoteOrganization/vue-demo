@@ -32,7 +32,14 @@ export const userApi = {
 
 export const authApi = {
   // POST
-  loginUrl: () => 'api/auth/login',
+  loginUrl: () => '/api/auth/login',
   // GET
-  loginOutUrl: () => 'api/auth/loginOut'
+  loginOutUrl: () => '/api/auth/loginOut'
+}
+
+export const captchaApi = {
+  // POST
+  captchaEmailUrl: () => '/api/captchas',
+  // GET
+  getCaptchaEmailUrl: () => '/api/captchas'
 }
