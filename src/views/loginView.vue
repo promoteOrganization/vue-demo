@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import authApi from '../api/authApi'
+
 export default {
   name: 'login-view',
   data () {
@@ -31,12 +33,6 @@ export default {
         password: [
           { required: true, message: '请输入账户密码', trigger: 'blur' }
         ]
-      },
-      userInfo: { // 保存用户信息
-        nick: null,
-        ulevel: null,
-        uid: null,
-        portrait: null
       }
     }
   },
@@ -48,19 +44,30 @@ export default {
     },
     toLogin () {
       this.userInfo = {
-        nick: 'Doterlin',
-        ulevel: 20,
-        uid: '10000',
-        portrait: '#'
+        email: this.ruleForm.account
       }
-      // 演示用
       // 登录状态15天后过期
       let expireDays = 1000 * 60 * 60 * 24 * 15
-      let value = this.ruleForm.account
-      this.setCookie('uid', value, expireDays)
-      this.$store.commit('DOLOGIN', this.userInfo)
-      // 登录成功后
-      this.$router.push('/')
+
+      let _this = this
+      authApi.login(this.ruleForm.account, this.ruleForm.password)
+        .then(function (response) {
+          if (response.data.code == 1) {
+            let userInfo = {
+              email: _this.ruleForm.account,
+              uid: response.data.uid
+            }
+            _this.setCookie('uid', response.data.uid, expireDays)
+            _this.$store.commit('DOLOGIN', userInfo)
+            // 登录成功后
+            _this.$router.push('/')
+          } else {
+            _this.$notify.error({
+              title: '错误',
+              message: response.data.msg
+            })
+          }
+        })
     },
     userLogin (formName) {
       this.$refs[formName].validate((valid) => {

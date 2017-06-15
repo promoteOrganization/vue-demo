@@ -25,18 +25,12 @@
 </template>
 
 <script>
+import authApi from './api/authApi'
 export default {
   name: 'app',
   data () {
     return {
-      open: false,
-      session: '',
-      userInfo: { // 保存用户信息
-        nick: null,
-        ulevel: null,
-        uid: null,
-        portrait: null
-      }
+      open: false
     }
   },
   computed: {
@@ -59,16 +53,19 @@ export default {
       }
     },
     loginOut () {
-      this.userInfo = {
-        nick: 'DoterlinD',
-        ulevel: 20,
-        uid: '10000',
-        portrait: '#'
-      }
-      this.delCookie('uid');
-      this.$store.commit('UPDATEUSER', this.userInfo);
-      this.$router.push('/login');
-      this.toggle()
+      let _this = this
+      authApi.loginOut()
+        .then(function (response) {
+          console.log(response)
+          let userInfo = {
+            email: null,
+            uid: null
+          }
+          _this.delCookie('uid');
+          _this.$store.commit('UPDATEUSER', userInfo);
+          _this.$router.push('/login');
+          _this.toggle()
+        })
     }
   }
 }

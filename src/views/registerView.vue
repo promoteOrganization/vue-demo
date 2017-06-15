@@ -26,7 +26,12 @@
         <mu-text-field v-model="registerEmailCaptcha" @textOverflow="handleInputOverflow" label="输入邮箱验证码" :errorText="errorEmailCaptchaText" :maxLength="4" labelFloat/>
       </div>
       <div v-if="activeStep == 1" class="register-step-two">
-        <mu-text-field v-model="registerPass" label="输入密码" :errorText="errorPassText" type="password" labelFloat/>
+        <mu-text-field v-model.trim="registerPass" label="输入密码" :errorText="errorPassText" type="password" labelFloat/>
+        <div v-if="registerPass" class="password-score">
+            <div v-if="countPassword <= 1" class="password-weak"></div>
+            <div v-if="countPassword > 1 && countPassword <= 3" v-text=""class="password-medium"></div>
+            <div v-if="countPassword == 4" class="password-strong"></div>
+        </div>
         <mu-text-field v-model="registerRePass" label="再次输入" :errorText="errorRePassText" type="password" labelFloat/>
       </div>
       <div v-if="activeStep == 2" class="register-step-three">
@@ -44,6 +49,8 @@
 
 <script>
 import captchaApi from '../api/captchaApi'
+import userApi from '../api/userApi'
+
 export default {
   name: 'register-view',
   data () {
@@ -92,6 +99,20 @@ export default {
   computed: {
     finished () {
       return this.activeStep > 2;
+    },
+    countPassword () {
+      var variations = {
+        digits: /\d/.test(this.registerPass),
+        lower: /[a-z]/.test(this.registerPass),
+        upper: /[A-Z]/.test(this.registerPass),
+        charactor: /[\^\%\&\'\,\;\=\?\$\*\x22]+/.test(this.registerPass)
+      }
+
+      var variationCount = 0
+      for (var check in variations) {
+        variationCount += (variations[check] === true) ? 1 : 0
+      }
+      return variationCount
     }
   },
   methods: {
@@ -118,10 +139,26 @@ export default {
       } else if (this.activeStep == 2) {
         // 演示用
         // 登录状态15天后过期
-        let expireDays = 1000 * 60 * 60 * 24 * 15
-        let value = this.registerEmail
-        this.setCookie('session', value, expireDays)
-        this.isLoging = false
+        // let expireDays = 1000 * 60 * 60 * 24 * 15
+        // let value = this.registerEmail
+        // this.setCookie('session', value, expireDays)
+
+        let _this = this
+        userApi.addUser(this.registerEmail, this.registerPass)
+          .then(function (response) {
+            console.log(response)
+            _this.$notify.success({
+              title: '成功',
+              message: '注册成功'
+            })
+          })
+          .catch(function (error) {
+            console.log(error)
+            _this.$notify.error({
+              title: '错误',
+              message: '注册失败'
+            })
+          })
         // 登录成功后
         this.$router.push('/')
       }
@@ -207,6 +244,24 @@ export default {
   width 300px
   margin 0px auto
   
+ .register-step-two
+    .password-score
+      height 15px
+      width 255px
+      border 1px solid #ccc
+      .password-weak
+        height 15px
+        width 85px
+        background-color red
+      .password-medium
+        height 15px
+        width 165px
+        background-color orange
+      .password-strong
+        height 15px
+        width 255px
+        background-color green
+            
 .register-step-three
   width 300px
   margin-left 220px
