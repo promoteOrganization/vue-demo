@@ -94,6 +94,13 @@ export default {
       } else {
         _this.buttonActive = true
       }
+    },
+    registerEmail: function (val) {
+      if (val == '') {
+        this.sendButtonActive = true
+      } else {
+        this.sendButtonActive = false
+      }
     }
   },
   computed: {
@@ -200,6 +207,9 @@ export default {
       if (this.registerEmailCaptcha == '') {
         this.buttonActive = true
       }
+      if (this.registerEmail == '') {
+        this.sendButtonActive = true
+      }
     },
     sendButtonTextTime () {
       let _this = this
@@ -233,7 +243,7 @@ export default {
 
 .demo-step-button 
   margin-top 12px
-  margin-right 12px
+  margin-left 20px
   
 .register-step-one
   width 280px
