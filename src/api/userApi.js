@@ -40,6 +40,14 @@ export default {
       withCredentials: true
     })
   },
+  getUserByEmail (email) {
+    let url = userApi.getUserByEmailUrl(email)
+    return axios({
+      method: 'get',
+      url: url,
+      withCredentials: true
+    })
+  },
   getSingleUser (id) {
     let url = userApi.getSingleUserUrl(id)
     return axios({

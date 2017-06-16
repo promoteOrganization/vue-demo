@@ -2,14 +2,15 @@ import { authApi } from './api'
 import axios from 'axios'
 
 export default {
-  login (email, pass) {
+  login (email, pass, cap) {
     let url = authApi.loginUrl()
     return axios({
       method: 'post',
       url: url,
       data: {
         email: email,
-        password: pass
+        password: pass,
+        captcha: cap
       },
       withCredentials: true
     })

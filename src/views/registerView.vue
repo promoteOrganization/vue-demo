@@ -99,7 +99,16 @@ export default {
       if (val == '') {
         this.sendButtonActive = true
       } else {
-        this.sendButtonActive = false
+        let _this = this
+        userApi.getUserByEmail(this.registerEmail)
+          .then(function (res) {
+            if (res.data.result) {
+              _this.sendButtonActive = true
+              _this.sendButtonText = '您已注册'
+            } else {
+              _this.sendButtonActive = false
+            }
+          })
       }
     }
   },

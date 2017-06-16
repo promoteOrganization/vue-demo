@@ -42,7 +42,8 @@ export default {
           { required: true, message: '请输入账户密码', trigger: 'blur' }
         ],
         captcha: [
-          { required: true, message: '请输入验证码', trigger: 'blur' }
+          { required: true, message: '请输入验证码', trigger: 'blur' },
+           { min: 6, max: 6, message: '长度为6个字符', trigger: 'blur' }
         ]
       }
     }
@@ -61,7 +62,7 @@ export default {
       let expireDays = 1000 * 60 * 60 * 24 * 15
 
       let _this = this
-      authApi.login(this.ruleForm.account, this.ruleForm.password)
+      authApi.login(this.ruleForm.account, this.ruleForm.password, this.ruleForm.captcha)
         .then(function (response) {
           if (response.data.code == 1) {
             let userInfo = {

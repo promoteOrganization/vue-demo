@@ -24,6 +24,8 @@ export const userApi = {
   updateUserUrl: id => '/api/users/' + id,
   // DELETE
   deleteUserUrl: id => '/api/users/' + id,
+  // GET 注册使用email查询
+  getUserByEmailUrl: email => '/api/users/register/' + email,
   // GET
   getSingleUserUrl: id => '/api/users/' + id,
   // GET
