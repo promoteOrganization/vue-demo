@@ -21,5 +21,13 @@ export default {
       },
       withCredentials: true
     })
+  },
+  getImgCaptcha () {
+    let url = captchaApi.getImgCaptchaUrl()
+    return axios({
+      method: 'get',
+      url: url,
+      withCredentials: true
+    })
   }
 }

@@ -7,7 +7,11 @@
     <el-form-item label="密码" prop="password">
       <el-input v-model="ruleForm.password" type="password"></el-input>
     </el-form-item>
-    <el-form-item>
+    <el-form-item label="验证码" prop="captcha">
+      <el-input v-model="ruleForm.captcha" type="captcha" class="captchaInput"></el-input>
+      <captcha></captcha>
+    </el-form-item>
+    <el-form-item class="inputButton">
       <el-button type="primary" @click="userLogin('ruleForm')">登录</el-button>
       <el-button @click="register()">注册</el-button>
     </el-form-item>
@@ -16,10 +20,14 @@
 </template>
 
 <script>
+import captcha from '../components/captcha/captcha.vue'
 import authApi from '../api/authApi'
 
 export default {
   name: 'login-view',
+  components: {
+    captcha
+  },
   data () {
     return {
       ruleForm: {
@@ -32,6 +40,9 @@ export default {
         ],
         password: [
           { required: true, message: '请输入账户密码', trigger: 'blur' }
+        ],
+        captcha: [
+          { required: true, message: '请输入验证码', trigger: 'blur' }
         ]
       }
     }
@@ -88,8 +99,13 @@ export default {
 <style lang="stylus" scoped>
 .login-view
   width 600px
-  height 280px
+  height 350px
   margin 0px auto 
   margin-top 50px
   padding-top 50px
+  .inputButton
+    margin-left 80px
+.captchaInput
+  width 200px
+  float left
 </style>

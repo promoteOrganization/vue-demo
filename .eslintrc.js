@@ -29,6 +29,13 @@ module.exports = {
     'eqeqeq': 0,
     'no-multi-spaces': 0,
     'indent': 0,
-    'no-useless-escape': 0
+    'no-useless-escape': 0,
+    'quotes': 0,
+    'padded-blocks': 0,
+    'yoda': 0,
+    'space-before-function-paren': 0,
+    'operator-linebreak': 0,
+    'no-unexpected-multiline': 0,
+    'func-call-spacing': 0
   }
 }

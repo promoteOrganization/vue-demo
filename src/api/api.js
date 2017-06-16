@@ -41,5 +41,7 @@ export const captchaApi = {
   // POST
   captchaEmailUrl: () => '/api/captchas',
   // GET
-  getCaptchaEmailUrl: () => '/api/captchas'
+  getCaptchaEmailUrl: () => '/api/captchas',
+  // GET
+  getImgCaptchaUrl: () => '/api/captchas/imgCaptcha'
 }
