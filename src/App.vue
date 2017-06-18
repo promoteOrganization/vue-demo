@@ -3,8 +3,8 @@
     <div class="header">
       <mu-appbar>
         <div class="inner">
-          <router-link to="/">新增故障</router-link>
-          <router-link to="/table">故障表格</router-link>
+          <router-link to="/">首页</router-link>
+          <router-link to="/other">其它页面</router-link>
         </div>
         <mu-flat-button v-if="!loginStatus" color="white" label="登录/注册" slot="right" @click="login"/>
         <mu-flat-button v-if="loginStatus" color="white" slot="right" label="茧" @click="toggle()" />
@@ -48,9 +48,7 @@ export default {
       this.open = !this.open
     },
     login () {
-      if (this.loginButtonLabel == '登录/注册') {
-        this.$router.push('/login');
-      }
+      this.$router.push('/login');
     },
     loginOut () {
       let _this = this

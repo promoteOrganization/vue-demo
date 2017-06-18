@@ -54,16 +54,5 @@ new Vue({
   router,
   store,
   template: '<App/>',
-  components: { App },
-  created () {
-    this.checkLogin()
-  },
-  methods: {
-    checkLogin () {
-      // 检查是否存在session
-      if (!this.getCookie('uid')) {
-        this.$router.push('/login')
-      }
-    }
-  }
+  components: { App }
 })

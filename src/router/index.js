@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import addManufactionView from '../views/addManufactionView.vue'
-import manufactionTableView from '../views/manufactionTableView.vue'
+import indexView from '../views/indexView.vue'
+import otherView from '../views/otherView.vue'
 import loginView from '../views/loginView.vue'
 import registerView from '../views/registerView.vue'
 
@@ -11,11 +11,11 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: addManufactionView
+      component: indexView
     },
     {
-      path: '/table',
-      component: manufactionTableView
+      path: '/other',
+      component: otherView
     },
     {
       path: '/login',
